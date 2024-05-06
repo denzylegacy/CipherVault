@@ -30,12 +30,12 @@ namespace CipherVault
         }
 
         public PasswordGenerator(
-            int minimumLengthPassword = 15,
-            int maximumLengthPassword = 20,
-            int minimumLowerCaseChars = 2,
-            int minimumUpperCaseChars = 2,
-            int minimumNumericChars = 2,
-            int minimumSpecialChars = 2)
+            int minimumLengthPassword = 40,
+            int maximumLengthPassword = 64,
+            int minimumLowerCaseChars = 10,
+            int minimumUpperCaseChars = 10,
+            int minimumNumericChars = 7,
+            int minimumSpecialChars = 7)
         {
             if (minimumLengthPassword < 15)
             {

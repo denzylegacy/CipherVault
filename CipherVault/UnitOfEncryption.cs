@@ -13,8 +13,10 @@ namespace CipherVault
         public static string EncryptText(string plainText, string password)
         {
             byte[] salt = GenerateRandomSalt();
-            byte[] key = DeriveKeyFromPassword(password, salt);
 
+            const int keySize = 256;
+            byte[] key = DeriveKeyFromPassword(password, salt, keySize / 8);
+            
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = key;
@@ -47,22 +49,22 @@ namespace CipherVault
         /// <param name="password">The password from which the key will be derived.</param>
         /// <param name="salt">The salt (random value) used as additional input in key derivation.</param>
         /// <returns>The derived 256-bit AES cryptographic key as a byte array.</returns>
-        public static byte[] DeriveKeyFromPassword(string password, byte[] salt)
+        public static byte[] DeriveKeyFromPassword(string password, byte[] salt, int keySizeInBytes)
         {
             const int iterations = 100_000;
             using (var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, salt, iterations))
             {
-                return rfc2898DeriveBytes.GetBytes(256);
+                return rfc2898DeriveBytes.GetBytes(keySizeInBytes); // 256
             }
         }
 
         /// <summary>
-        /// Generates a random salt of 192bits
+        /// Generates a random salt of 32-bits
         /// </summary>
         /// <returns>A byte array containing the random salt.</returns>
         private static byte[] GenerateRandomSalt()
         {
-            byte[] salt = new byte[192];
+            byte[] salt = new byte[16];
             using (var rng = new RNGCryptoServiceProvider())
             {
                 rng.GetBytes(salt);

@@ -14,20 +14,21 @@ namespace CipherVault
         {
             byte[] encryptedBytes = Convert.FromBase64String(cipherText);
 
-            byte[] iv = new byte[16];
-            Array.Copy(encryptedBytes, iv, iv.Length);
-
             byte[] salt = encryptedBytes.Take(16).ToArray();
-            byte[] key = UnitOfEncryption.DeriveKeyFromPassword(password, salt);
+            byte[] iv = encryptedBytes.Skip(16).Take(16).ToArray();
+
+            const int keySize = 256;
+            byte[] key = UnitOfEncryption.DeriveKeyFromPassword(password, salt, keySize / 8);
 
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = key;
                 aesAlg.IV = iv;
+                aesAlg.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                using (var msDecrypt = new MemoryStream(encryptedBytes, iv.Length, encryptedBytes.Length - iv.Length))
+                using (var msDecrypt = new MemoryStream(encryptedBytes, 32, encryptedBytes.Length - 32))
                 {
                     using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {

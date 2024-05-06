@@ -18,20 +18,20 @@
 
             #region Encrypt
             string cipherText = UnitOfEncryption.EncryptText(plainText, password);
-            Console.WriteLine("Encrypted Text:");
+            Console.WriteLine("\nEncrypted Text:");
             Console.WriteLine(cipherText);
 
             Console.ReadLine();
             #endregion
 
 
-            #region Decryption
-            string decryptedText = UnitOfDecryption.DecryptText(cipherText, password);
-            Console.WriteLine("Texto Descriptografado:");
-            Console.WriteLine(decryptedText);
+            //#region Decryption
+            //string decryptedText = UnitOfDecryption.DecryptText(cipherText, password);
+            //Console.WriteLine("\nDecrypted Text:");
+            //Console.WriteLine(decryptedText);
 
-            Console.ReadLine();
-            #endregion
+            //Console.ReadLine();
+            //#endregion
         }
     }
 }
